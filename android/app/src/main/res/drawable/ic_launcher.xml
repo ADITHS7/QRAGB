@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Deep navy rounded tile: readable on light and dark launchers. -->
+    <path
+        android:fillColor="#08111F"
+        android:pathData="M14,0 L94,0 C101.73,0 108,6.27 108,14 L108,94 C108,101.73 101.73,108 94,108 L14,108 C6.27,108 0,101.73 0,94 L0,14 C0,6.27 6.27,0 14,0 Z" />
+    <path
+        android:fillColor="#12243A"
+        android:pathData="M16,7 L92,7 C97.52,7 102,11.48 102,17 L102,91 C102,96.52 97.52,101 92,101 L16,101 C10.48,101 6,96.52 6,91 L6,17 C6,11.48 10.48,7 16,7 Z" />
+
+    <!-- QR finder brackets. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,24 L45,24 L45,29 L30,29 L30,44 L25,44 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M63,24 L83,24 L83,44 L78,44 L78,29 L63,29 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,64 L30,64 L30,79 L45,79 L45,84 L25,84 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M78,64 L83,64 L83,84 L63,84 L63,79 L78,79 Z" />
+
+    <!-- QR data modules. -->
+    <path
+        android:fillColor="#DCEBFF"
+        android:pathData="M45,44 L53,44 L53,52 L45,52 Z M57,44 L64,44 L64,51 L57,51 Z M47,56 L54,56 L54,63 L47,63 Z M58,55 L68,55 L68,65 L58,65 Z M44,68 L52,68 L52,76 L44,76 Z M57,69 L64,69 L64,76 L57,76 Z M69,45 L76,45 L76,52 L69,52 Z" />
+
+    <!-- Bright scan beam: the app's recognizable action mark. -->
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M19,52 L89,52 L89,56 L19,56 Z" />
+    <path
+        android:fillColor="#FF9F1C"
+        android:pathData="M84,49 C86.76,49 89,51.24 89,54 C89,56.76 86.76,59 84,59 C81.24,59 79,56.76 79,54 C79,51.24 81.24,49 84,49 Z" />
+</vector>
