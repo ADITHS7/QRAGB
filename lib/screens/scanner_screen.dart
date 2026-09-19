@@ -176,6 +176,12 @@ class _ScannerScreenState extends State<ScannerScreen>
   ) async {
     final appType = widget.appType;
 
+    print('========================================');
+    print('SUBMIT REGISTRATION CALLED');
+    print('APP TYPE: $appType');
+    print('BARCODE: ${request.barcode}');
+    print('========================================');
+
     try {
       if (lookupFuture != null &&
           (appType == AppType.food || appType == AppType.gift)) {

@@ -149,13 +149,15 @@ class SocietyApi {
 
   /// Marks the scanned society barcode for the Food service. The request is
   /// separate from [lookup], so the user can review the response first.
-  Future<void> markFood(SocietyLookupRequest request) =>
-      _markRegistration(request, path: '/society/food', service: 'food');
+  Future<void> markFood(SocietyLookupRequest request) => _markRegistration(
+    request,
+    service: 'food',
+    endpoint: AppConstants.foodRegistrationUri,
+  );
 
   /// Registers the scanned society barcode for the Gift service.
   Future<void> markGift(SocietyLookupRequest request) => _markRegistration(
     request,
-    path: '/society/gift',
     service: 'gift',
     endpoint: AppConstants.giftRegistrationUri,
   );
@@ -163,29 +165,21 @@ class SocietyApi {
   /// Registers the scanned society barcode for the Entry service.
   Future<void> punchEntry(SocietyLookupRequest request) => _markRegistration(
     request,
-    path: '/society/Punchcheck',
     service: 'entry',
     endpoint: AppConstants.entryRegistrationUri,
     usePost: true,
   );
 
+  /// All registration endpoints come from [AppConstants] so that a base URL
+  /// with a path prefix (for example `https://host/agbback`) is preserved.
+  /// Rebuilding the URL from the scanned QR host would silently drop it.
   Future<void> _markRegistration(
     SocietyLookupRequest request, {
-    required String path,
+    required Uri endpoint,
     required String service,
-    Uri? endpoint,
     bool usePost = false,
   }) async {
-    final sourceUri = request.uri;
-    final registrationUri =
-        endpoint ??
-        Uri(
-          scheme: sourceUri.scheme,
-          userInfo: sourceUri.userInfo,
-          host: sourceUri.host,
-          port: sourceUri.hasPort ? sourceUri.port : null,
-          path: path,
-        );
+    final registrationUri = endpoint;
 
     final headers = <String, String>{
       ..._authHeaders,
