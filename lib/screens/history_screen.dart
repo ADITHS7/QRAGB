@@ -113,12 +113,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  SelectableText(
                     snapshot.error.toString(),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
+                      height: 1.35,
                     ),
                   ),
                   const SizedBox(height: 8),
