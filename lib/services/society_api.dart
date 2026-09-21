@@ -82,52 +82,57 @@ class SocietyApi {
   /// intentionally not mapped here because the server provides no Entry type
   /// for this endpoint.
   Future<FoodGiftHistoryResponse> fetchFoodGiftHistory(AppType appType) async {
-    final type = switch (appType) {
-      AppType.gift => '1',
-      AppType.food => '2',
+    final uri = switch (appType) {
+      AppType.gift => AppConstants.giftHistoryUri,
+      AppType.food => AppConstants.foodHistoryUri,
       AppType.entry => throw ArgumentError(
         'Food/Gift history is not available for Entry mode.',
       ),
     };
-    final uri = AppConstants.foodGiftHistoryUri.replace(
-      queryParameters: <String, String>{'type': type},
-    );
 
     try {
       final response = await _client
           .get(uri, headers: _authHeaders)
           .timeout(requestTimeout);
 
-      if (response.body.trim().isEmpty) {
-        if (response.statusCode < 200 || response.statusCode >= 300) {
-          throw SocietyApiException(
-            'History request failed (HTTP ${response.statusCode}).',
-            statusCode: response.statusCode,
-          );
+      final body = response.body.trim();
+
+      // Decode first but never let a parse failure mask the HTTP status: an
+      // error page (for example an HTML 404) must be reported as that status,
+      // not as a generic JSON problem.
+      dynamic decoded;
+      FormatException? decodeError;
+      if (body.isNotEmpty) {
+        try {
+          decoded = jsonDecode(body);
+        } on FormatException catch (error) {
+          decodeError = error;
         }
+      }
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw SocietyApiException(
+          _serverMessage(decoded) ??
+              'History request failed (HTTP ${response.statusCode}) for $uri. '
+                  '${_bodyPreview(response.body)}',
+          statusCode: response.statusCode,
+          payload: decoded,
+        );
+      }
+
+      if (body.isEmpty) {
         return const FoodGiftHistoryResponse(
           entries: <FoodGiftHistoryEntry>[],
           count: 0,
         );
       }
 
-      dynamic decoded;
-      try {
-        decoded = jsonDecode(response.body);
-      } on FormatException catch (error) {
+      if (decodeError != null) {
         throw SocietyApiException(
-          'The society server returned invalid JSON.',
+          'History response was not JSON (HTTP ${response.statusCode}) for '
+          '$uri. ${_bodyPreview(response.body)}',
           statusCode: response.statusCode,
-          cause: error,
-        );
-      }
-
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        throw SocietyApiException(
-          _serverMessage(decoded) ??
-              'History request failed (HTTP ${response.statusCode}).',
-          statusCode: response.statusCode,
-          payload: decoded,
+          cause: decodeError,
         );
       }
 
@@ -233,6 +238,17 @@ class SocietyApi {
 
   static String _title(String value) =>
       value.isEmpty ? value : '${value[0].toUpperCase()}${value.substring(1)}';
+
+  /// Short single-line snippet of a non-JSON body, so an HTML error page is
+  /// recognisable in the surfaced message without dumping the whole page.
+  static String _bodyPreview(String body) {
+    final collapsed = body.replaceAll(RegExp(r'\s+'), ' ').trim();
+    if (collapsed.isEmpty) return 'Empty response body.';
+    final snippet = collapsed.length > 160
+        ? '${collapsed.substring(0, 160)}...'
+        : collapsed;
+    return 'Server said: $snippet';
+  }
 
   static String? _serverMessage(dynamic payload) {
     if (payload is! Map) return null;

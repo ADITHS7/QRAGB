@@ -176,11 +176,7 @@ class _ScannerScreenState extends State<ScannerScreen>
   ) async {
     final appType = widget.appType;
 
-    print('========================================');
-    print('SUBMIT REGISTRATION CALLED');
-    print('APP TYPE: $appType');
-    print('BARCODE: ${request.barcode}');
-    print('========================================');
+    
 
     try {
       if (lookupFuture != null &&
@@ -462,11 +458,11 @@ class _TopBar extends StatelessWidget {
             onPressed: onHistory,
           ),
           const SizedBox(width: 8),
-          _CircleButton(
-            icon: Icons.logout_rounded,
-            tooltip: 'Log out',
-            onPressed: onLogout,
-          ),
+          // _CircleButton(
+          //   icon: Icons.logout_rounded,
+          //   tooltip: 'Log out',
+          //  // onPressed: onLogout,
+          // ),
         ],
       ),
     );
